@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ADKAR-радар «Триада-15»</title>
+<style>
+  :root{
+    --bg:#f4f4f2;
+    --card:#ffffff;
+    --card2:#f9f9f7;
+    --text:#2b2f33;
+    --text2:#4a5057;
+    --muted:#6b7178;
+    --line:#dcdedf;
+    --line2:#e9eaea;
+    --accent:#4a6178;
+    --accent-ink:#ffffff;
+    --accent-soft:#e6ebf0;
+    --z0:#ecd8d3; --z1:#f0e3d2; --z2:#eee9d0; --z3:#dbe7dd;
+    --z0i:#8f4a3e; --z1i:#86592f; --z2i:#6f6424; --z3i:#3d6448;
+    --z0s:#b9786b; --z1s:#c09366; --z2s:#b3a260; --z3s:#7ea287;
+    --note:#f5f0e6; --note-line:#d8c9a6;
+    --shadow:0 1px 2px rgba(43,47,51,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1a1d20;
+      --card:#23272b;
+      --card2:#1f2326;
+      --text:#e4e6e8;
+      --text2:#c3c8cd;
+      --muted:#9aa1a8;
+      --line:#3a4046;
+      --line2:#2f3439;
+      --accent:#8fa6bd;
+      --accent-ink:#15191d;
+      --accent-soft:#2c3640;
+      --z0:#43302d; --z1:#433729; --z2:#3f3b2a; --z3:#2c3a30;
+      --z0i:#e0a79b; --z1i:#dcb48a; --z2i:#d3c68a; --z3i:#a6c9ae;
+      --z0s:#a8695c; --z1s:#a8805a; --z2s:#9c8e55; --z3s:#6f9278;
+      --note:#2e2a22; --note-line:#5e5238;
+      --shadow:none;
+    }
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:19px;
+    line-height:1.55;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:24px 16px 72px;}
+  h1{font-size:28px;line-height:1.25;margin:6px 0 12px;font-weight:600;}
+  h2{font-size:23px;line-height:1.3;margin:0 0 12px;font-weight:600;}
+  h3{font-size:20px;line-height:1.3;margin:0 0 8px;font-weight:600;}
+  p{margin:0 0 12px;}
+  p:last-child{margin-bottom:0;}
+  ul{margin:0;padding-left:1.2em;}
+  li{margin:6px 0;}
+  b,strong{font-weight:600;}
+  .lead{color:var(--muted);font-size:18px;}
+  .small{font-size:16px;color:var(--muted);}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:20px 18px;
+    margin:0 0 16px;
+    box-shadow:var(--shadow);
+  }
+  .eyebrow{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
+
+  /* кнопки */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-height:56px;padding:14px 22px;
+    font:inherit;font-size:19px;font-weight:600;line-height:1.25;
+    border-radius:12px;border:1px solid var(--line);
+    background:var(--card);color:var(--text);
+    cursor:pointer;text-align:center;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .btn:hover{border-color:var(--accent);}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+  .btn.quiet{background:transparent;border-color:transparent;color:var(--muted);font-weight:500;font-size:17px;min-height:48px;text-decoration:underline;text-underline-offset:3px;}
+  .btn.block{display:flex;width:100%;}
+  .stack{display:flex;flex-direction:column;gap:12px;}
+  .row{display:flex;gap:12px;flex-wrap:wrap;}
+  .row > .btn{flex:1 1 200px;}
+
+  /* поля */
+  label.field{display:block;margin:0 0 14px;}
+  label.field span{display:block;font-size:16px;color:var(--muted);margin-bottom:6px;}
+  input[type="text"]{
+    width:100%;min-height:54px;padding:12px 14px;
+    font:inherit;font-size:19px;color:var(--text);
+    background:var(--card2);border:1px solid var(--line);border-radius:10px;
+  }
+  input[type="text"]:focus{outline:3px solid var(--accent-soft);border-color:var(--accent);}
+
+  /* прогресс */
+  .progress{height:8px;background:var(--line2);border-radius:8px;overflow:hidden;margin:4px 0 10px;}
+  .progress > div{height:100%;background:var(--accent);border-radius:8px;transition:width .25s ease;}
+  .step{font-size:16px;color:var(--muted);margin:0 0 8px;}
+  .el-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .el-id{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:48px;height:48px;padding:0 10px;border-radius:12px;
+    background:var(--accent-soft);color:var(--accent);font-size:22px;font-weight:700;
+  }
+  .el-en{font-size:17px;color:var(--muted);font-weight:400;}
+  .hint{background:var(--card2);border:1px solid var(--line2);border-radius:10px;padding:12px 14px;font-size:17px;color:var(--text2);}
+
+  /* вопрос */
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 16px;margin:0 0 16px;box-shadow:var(--shadow);}
+  .q.missing{border-color:var(--z0s);box-shadow:0 0 0 3px var(--z0);}
+  .q-level{display:block;font-size:14px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+  .q-text{display:block;font-size:20px;font-weight:600;line-height:1.35;margin-bottom:14px;}
+  .opts{display:flex;flex-direction:column;gap:10px;}
+  label.opt{
+    position:relative;display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;
+    min-height:58px;padding:12px 14px;
+    border:1.5px solid var(--line);border-radius:12px;background:var(--card);
+    cursor:pointer;font-size:18px;line-height:1.35;
+    -webkit-tap-highlight-color:transparent;
+  }
+  label.opt:hover{border-color:var(--accent);}
+  label.opt input{position:absolute;opacity:0;width:1px;height:1px;}
+  label.opt:focus-within{outline:3px solid var(--accent);outline-offset:2px;}
+  label.opt .num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:40px;height:40px;border-radius:50%;
+    border:1.5px solid var(--line);color:var(--muted);font-weight:600;font-size:18px;
+  }
+  label.opt.on{border-color:var(--accent);background:var(--accent-soft);}
+  label.opt.on .num{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);}
+  label.ev{
+    position:relative;display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:center;
+    margin-top:12px;padding:12px 14px;min-height:54px;
+    border-radius:12px;border:1px dashed var(--line);cursor:pointer;font-size:17px;color:var(--text2);
+  }
+  label.ev input{position:absolute;opacity:0;width:1px;height:1px;}
+  label.ev:focus-within{outline:3px solid var(--accent);outline-offset:2px;}
+  label.ev .box{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--line);background:var(--card);position:relative;}
+  label.ev.on{border-style:solid;border-color:var(--accent);color:var(--text);}
+  label.ev.on .box{background:var(--accent);border-color:var(--accent);}
+  label.ev.on .box::after{
+    content:"";position:absolute;left:9px;top:4px;width:8px;height:15px;
+    border:solid var(--accent-ink);border-width:0 3px 3px 0;transform:rotate(45deg);
+  }
+  .q-err{color:var(--z0i);font-size:16px;margin:10px 0 0;font-weight:600;}
+  .navrow{display:flex;gap:12px;margin-top:8px;}
+  .navrow .btn{flex:1;}
+  .navrow .btn.primary{flex:2;}
+
+  /* результат */
+  .verdict{border-left:5px solid var(--accent);}
+  .verdict.alert{border-left-color:var(--z0s);}
+  .zone-chip{
+    display:inline-block;padding:3px 10px;border-radius:999px;font-size:15px;font-weight:600;white-space:nowrap;
+  }
+  .zc0{background:var(--z0);color:var(--z0i);}
+  .zc1{background:var(--z1);color:var(--z1i);}
+  .zc2{background:var(--z2);color:var(--z2i);}
+  .zc3{background:var(--z3);color:var(--z3i);}
+
+  .radar-card{padding:14px 10px 18px;}
+  svg.radar{display:block;width:100%;max-width:560px;height:auto;margin:0 auto;}
+  .ring.z0{fill:var(--z0);} .ring.z1{fill:var(--z1);} .ring.z2{fill:var(--z2);} .ring.z3{fill:var(--z3);}
+  .ring{stroke:var(--card);stroke-width:1.5;}
+  .axis{stroke:var(--card);stroke-width:1.5;}
+  .ringnum{fill:var(--muted);font-size:12px;}
+  .poly-cur{fill:var(--accent);fill-opacity:.12;stroke:var(--accent);stroke-width:2.5;stroke-linejoin:round;}
+  .poly-prev{fill:none;stroke:var(--muted);stroke-width:2;stroke-dasharray:6 5;stroke-linejoin:round;}
+  .spread{stroke:var(--text);stroke-opacity:.16;stroke-width:12;stroke-linecap:round;}
+  .mk{fill:var(--text2);}
+  .dot{fill:var(--card);stroke:var(--accent);stroke-width:3;}
+  .bn-ring{fill:none;stroke:var(--z0i);stroke-width:2;stroke-dasharray:4 3;}
+  .lab{fill:var(--text2);font-size:14px;}
+  .lab-strong{fill:var(--text);font-size:16px;font-weight:700;}
+  .lab-bn{fill:var(--z0i);font-size:13px;font-weight:600;}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:center;margin-top:10px;font-size:15px;color:var(--muted);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .legend svg{flex:none;}
+  .sw{width:16px;height:16px;border-radius:4px;display:inline-block;}
+
+  .elcard h3{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+  .elcard .meta{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 12px;}
+  .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:15px;background:var(--card2);border:1px solid var(--line2);color:var(--text2);white-space:nowrap;}
+  .elcard.is-bn{border-color:var(--z0s);}
+  .bn-tag{font-size:14px;font-weight:600;color:var(--z0i);background:var(--z0);padding:2px 9px;border-radius:999px;}
+  .levels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 12px;}
+  .lvl{background:var(--card2);border:1px solid var(--line2);border-radius:10px;padding:8px 10px;text-align:center;}
+  .lvl .ln{display:block;font-size:14px;color:var(--muted);}
+  .lvl .lv{display:block;font-size:22px;font-weight:700;}
+  .lvl.low{border-color:var(--z0s);}
+  .lvl.low .lv{color:var(--z0i);}
+  .elcard p{font-size:18px;}
+  .elcard .sub{color:var(--text2);}
+
+  .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px;background:var(--card);}
+  table{border-collapse:collapse;width:100%;min-width:620px;font-size:17px;}
+  th,td{padding:12px 10px;text-align:center;border-bottom:1px solid var(--line2);font-variant-numeric:tabular-nums;}
+  th{font-size:14px;font-weight:600;color:var(--muted);background:var(--card2);text-transform:uppercase;letter-spacing:.03em;}
+  th:first-child,td:first-child{text-align:left;padding-left:14px;}
+  tbody tr:last-child td{border-bottom:0;}
+  tr.is-bn td{background:var(--z0);}
+  tr.is-bn td:first-child{box-shadow:inset 4px 0 0 var(--z0s);}
+  .delta-up{color:var(--z3i);font-weight:600;}
+  .delta-down{color:var(--z0i);font-weight:600;}
+  .delta-eq{color:var(--muted);}
+  td.cell-low{color:var(--z0i);font-weight:700;}
+
+  .note{background:var(--note);border:1px solid var(--note-line);border-radius:12px;padding:14px 16px;font-size:17px;}
+  .hist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;}
+  .hist li{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:12px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--card2);}
+  .hist .hd{font-weight:600;font-size:17px;}
+  .hist .hs{font-size:16px;color:var(--text2);font-variant-numeric:tabular-nums;flex:1 1 220px;}
+  .hist .btn{min-height:48px;font-size:17px;padding:10px 16px;}
+  .hist .tag{font-size:15px;color:var(--muted);}
+
+  details.int{border:1px solid var(--line);border-radius:12px;background:var(--card);margin:0 0 12px;}
+  details.int > summary{
+    list-style:none;cursor:pointer;padding:16px 16px;min-height:58px;
+    display:flex;align-items:center;gap:12px;font-size:19px;font-weight:600;
+  }
+  details.int > summary::-webkit-details-marker{display:none;}
+  details.int > summary::after{content:"";margin-left:auto;width:10px;height:10px;border:solid var(--muted);border-width:0 2px 2px 0;transform:rotate(45deg);flex:none;}
+  details.int[open] > summary::after{transform:rotate(-135deg);}
+  details.int .body{padding:0 16px 16px;}
+  details.int .body li{font-size:18px;}
+  details.int.is-bn{border-color:var(--z0s);}
+  .zones{display:flex;flex-direction:column;gap:8px;}
+  .zones div{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;padding:10px 12px;border-radius:10px;}
+  .zones b.zn{font-size:22px;text-align:center;}
+  .pat{border-top:1px solid var(--line2);padding:12px 0;}
+  .pat:first-of-type{border-top:0;padding-top:0;}
+  .pat h3{font-size:18px;margin-bottom:4px;}
+  .pat p{font-size:18px;}
+  .foot{color:var(--muted);font-size:15px;text-align:center;margin-top:28px;}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+
+  @media (max-width:520px){
+    body{font-size:18px;}
+    h1{font-size:25px;}
+    .wrap{padding:16px 12px 64px;}
+    .card{padding:16px 14px;}
+    .q{padding:16px 12px;}
+    .q-text{font-size:19px;}
+    .navrow{position:sticky;bottom:0;background:var(--bg);padding:10px 0 12px;margin:0 -2px;}
+  }
+  @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
+  @media print{
+    body{background:#fff;color:#000;font-size:14px;}
+    .no-print{display:none !important;}
+    .card,.q,details.int{box-shadow:none;break-inside:avoid;}
+    .wrap{max-width:none;padding:0;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <main id="app" aria-live="polite"></main>
+  <p class="foot">Ответы хранятся только в этом браузере на этом устройстве и никуда не отправляются.</p>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ===================== Содержание анкеты ===================== */
+
+var LEVELS = [
+  {short:"Слова", long:"вербальный уровень"},
+  {short:"Дела",  long:"поведенческий уровень"},
+  {short:"Среда", long:"социальный уровень"}
+];
+
+var ELEMENTS = [
+  {id:"A", en:"Awareness", ru:"Осознание", ask:"Понимают ли, зачем нужно изменение", q:[
+    {code:"A1", text:"Как эти люди своими словами объясняют, зачем нужно изменение?", o:[
+      "Как чью-то прихоть или амбиции.",
+      "Никак: «сказали — делаем».",
+      "Называют цель компании, но не связывают со своей работой.",
+      "Называют, что сломается конкретно у них, если не менять."]},
+    {code:"A2", text:"Что они делают с информацией о проекте — письмами, встречами, материалами?", o:[
+      "Не открывают, не приходят, не читают.",
+      "Присутствуют формально, вопросов не задают.",
+      "Читают и уточняют, как именно делать.",
+      "Ищут сами и приносят найденное другим."]},
+    {code:"A3", text:"Как они обсуждают изменение между собой, когда вас нет рядом?", o:[
+      "Сарказм и мемы про руководство.",
+      "Не обсуждают вовсе.",
+      "Обсуждают, кому будет хуже.",
+      "Обсуждают, как сделать это лучше."]}
+  ]},
+  {id:"D", en:"Desire", ru:"Желание", ask:"Хотят ли участвовать", q:[
+    {code:"D4", text:"Что они говорят об изменении, когда их не спрашивают напрямую?", o:[
+      "Открыто возражают и жалуются.",
+      "«Да-да» — и молчание.",
+      "«Надо так надо», без интереса.",
+      "Спорят по существу и предлагают своё."]},
+    {code:"D5", text:"Делает ли кто-то из них по проекту что-то сверх обязательного?", o:[
+      "Делают только под прямым указанием.",
+      "Делают ровно требуемый минимум.",
+      "Один-два делают чуть больше нужного.",
+      "Сами берут задачи, о которых их не просили."]},
+    {code:"D6", text:"Как команда реагирует на того, кто открыто саботирует?", o:[
+      "Поддерживают его.",
+      "Игнорируют, чтобы не конфликтовать.",
+      "Жалуются вам и ждут, что накажете вы.",
+      "Сами говорят ему, что он подставляет остальных."]}
+  ]},
+  {id:"K", en:"Knowledge", ru:"Знание", ask:"Знают ли, как действовать по-новому", q:[
+    {code:"K7", text:"Могут ли они вслух, не показывая руками и не открывая экран, назвать шаги нового процесса?", o:[
+      "Не могут начать.",
+      "Называют начало, дальше сбиваются.",
+      "Называют все шаги, путаются в исключениях.",
+      "Называют шаги и объясняют, почему они такие."]},
+    {code:"K8", text:"Что они делают, столкнувшись с затруднением в новом процессе?", o:[
+      "Бросают или делают по-старому.",
+      "Сразу идут к вам.",
+      "Ищут сами — инструкция, база знаний, коллега.",
+      "Разбираются и фиксируют решение для других."]},
+    {code:"K9", text:"К кому в команде идут за советом по новому процессу?", o:[
+      "Ни к кому: каждый мучается в одиночку.",
+      "Только к вам.",
+      "Есть один-два, к кому обращаются.",
+      "Обмениваются приёмами между собой без вас."]}
+  ]},
+  {id:"Ab", en:"Ability", ru:"Способность", ask:"Получается ли на деле", q:[
+    {code:"Ab10", text:"Как они описывают своё состояние, когда работают по-новому?", o:[
+      "«Я физически не могу это сделать».",
+      "«Ничего не успеваю, всё тормозит».",
+      "«Медленно, но справляюсь».",
+      "«Уже привычно, руки делают сами»."]},
+    {code:"Ab11", text:"Как выглядит их работа по-новому сейчас — по сравнению с началом проекта?", o:[
+      "Работа по проекту фактически стоит.",
+      "Медленнее и с ошибками, много переделок.",
+      "Вышли на прежнюю скорость, ошибки редкие.",
+      "Справляются и с нестандартными случаями."]},
+    {code:"Ab12", text:"Как ведёт себя группа, когда по проекту горит срок?", o:[
+      "Паника и поиск виноватого.",
+      "Каждый спасает свой участок.",
+      "Координируются только через вас.",
+      "Договариваются между собой и перераспределяют работу."]}
+  ]},
+  {id:"R", en:"Reinforcement", ru:"Закрепление", ask:"Останется ли без вас", q:[
+    {code:"R13", text:"Что звучит в команде, когда кто-то ошибается, работая по-новому?", o:[
+      "Разбор виноватого.",
+      "Молчание и неодобрение.",
+      "«Ничего страшного, исправим».",
+      "«Хорошо, что вскрылось» — разбирают причину."]},
+    {code:"R14", text:"Что происходит с новым способом работы, когда вы не контролируете неделю-две?", o:[
+      "Полный откат к старому способу.",
+      "Новое — только для отчёта вам.",
+      "Новое основное, но при авралах откатываются.",
+      "Новое используется всегда, включая авралы."]},
+    {code:"R15", text:"Как в команде отмечают то, что получается по-новому?", o:[
+      "Никак, успехи не замечают.",
+      "Сухое «спасибо» на планёрке.",
+      "Публично хвалят конкретных людей.",
+      "Есть свой ритуал: разбирают удачные случаи, обмениваются приёмами."]}
+  ]}
+];
+
+var ZONES = [
+  {name:"красная зона",   title:"Критический барьер",  text:"Двигаться дальше нельзя, нужен шаг назад."},
+  {name:"оранжевая зона", title:"Иллюзия согласия",    text:"Говорят правильное, делают обратное."},
+  {name:"жёлтая зона",    title:"Ручное управление",   text:"Держится на руководителе. Любой аврал вернёт назад."},
+  {name:"зелёная зона",   title:"Закрепилось",         text:"Стало частью работы."}
+];
+
+var SCORE_TEXT = {
+  A:[
+    "Люди не видят смысла в изменении и объясняют его чужой прихотью. Любые следующие шаги будут восприниматься как давление.",
+    "Смысл изменения до людей не дошёл: делают, потому что сказали. При первой трудности появится вопрос «зачем мы это вообще затеяли».",
+    "Общую цель понимают, но не связывают со своей работой. Не хватает личного ответа на вопрос «что сломается у меня, если ничего не менять».",
+    "Понимают, зачем нужно изменение, и могут объяснить это своими словами. Осознание — не барьер."],
+  D:[
+    "Открытое сопротивление: люди не хотят участвовать, и среда их в этом поддерживает.",
+    "Формальное согласие без внутреннего желания. Высокий риск тихого саботажа.",
+    "Изменение принимают как неизбежность, но без интереса. Энергии хватит на минимум, а не на трудности.",
+    "Есть личное желание участвовать: люди берут на себя больше обязательного."],
+  K:[
+    "Люди не знают, как действовать по-новому, и возвращаются к старому способу.",
+    "Знание сосредоточено у вас: без вас процесс не идёт.",
+    "Основные шаги знают, но путаются в исключениях. Нужны разборы нестандартных случаев.",
+    "Знают, как работать по-новому, и передают это знание друг другу."],
+  Ab:[
+    "Работа по-новому фактически не получается. Давление сейчас только усилит откат.",
+    "Навык не сформирован: медленно, с ошибками и со стрессом. Нужны время и право на ошибку.",
+    "В обычных условиях справляются, но под давлением срока держатся за вас.",
+    "Навык сформирован: справляются сами, в том числе в нестандартных ситуациях."],
+  R:[
+    "Изменение держится только на контроле: без него — откат, а ошибки наказываются.",
+    "Новое делается «для отчёта», успехи не замечаются. Откат вероятен, как только ослабнет внимание.",
+    "Новое стало основным, но в авралах люди возвращаются к старому.",
+    "Новое закрепилось и поддерживается самой командой."]
+};
+
+var PATTERNS = {
+  even:  {title:"Каналы согласны", text:"Ответы по словам, делам и среде близки — балл можно считать надёжным."},
+  words: {title:"Ниже слова — профессиональный скептицизм", text:"Ворчат, но делают. Не спорьте с риторикой — поддерживайте действия и давайте признание за результат."},
+  deeds: {title:"Ниже дела — имитация согласия", text:"На словах лучше, чем на деле. Объяснения больше не помогут — уберите препятствия: доступы, время, инструменты."},
+  env:   {title:"Ниже среда — одинокий герой", text:"Отдельные люди делают, но среда против. Работайте с группой, а не с человеком: неформальные лидеры, публичное признание, разбор страхов команды."}
+};
+
+var INTERVENTIONS = {
+  A:[
+    ["Сторителлинг «цена старого пути»", "история о том, что уже сломалось из-за старого способа работы, с конкретными цифрами ущерба."],
+    ["Личная связка", "разговор один на один о том, что изменится в работе именно этого человека, если ничего не менять."],
+    ["«Позитивное исследование»", "разбор случаев, где новый способ уже сработал, — чтобы смысл был виден на своих примерах."],
+    ["Кулуарный разговор", "вопрос «если не брать слова руководства, зачем нам это на самом деле?» показывает, как смысл понят в действительности."]],
+  D:[
+    ["Разговор о личной выгоде", "«что ты потеряешь, если новый процесс провалится?» и «какой сценарий тебя пугает больше всего?»"],
+    ["Обратная связь по ПРЧБ с проверкой по SCARF", "поведение, результат, чувства, будущее — без угрозы статусу, с определённостью и правом выбора."],
+    ["Практика уязвимости", "руководитель рассказывает о своих сомнениях и ошибках — это снимает страх потерять лицо."],
+    ["«От провала к прорыву»", "история о том, как трудность превратилась в результат."]],
+  K:[
+    ["Проговаривание вслух", "сотрудник называет шаги словами, без экрана. Где запнулся — там пробел в знании."],
+    ["«Разбор полётов»", "на планёрках отрабатывается один навык, с понятной метрикой и обратной связью."],
+    ["Наставник вместо инструкции", "разбор реальных задач рядом с человеком, который уже умеет."],
+    ["Разбор нестандартных случаев", "команда собирает исключения и вместе ищет решения, решения записываются."]],
+  Ab:[
+    ["Защищённое время", "часы на практику без давления KPI и сроков."],
+    ["Легализация ошибки", "право на неидеальный результат и сниженные требования на период освоения."],
+    ["«Триады»", "замкнуть людей друг на друга, чтобы они помогали без вашего участия."],
+    ["Перенос фокуса на процесс", "на время освоения оценивать сам факт работы по-новому, а не скорость."]],
+  R:[
+    ["«Светофор» на ретроспективе", "что прекратить, что начать, что продолжить — регулярно, а не разово."],
+    ["Ритуалы признания", "разбор удачных случаев, короткий дайджест быстрых побед."],
+    ["Разбор ошибок без виноватых", "«хорошо, что вскрылось» — и разбор причины, а не человека."],
+    ["Встраивание в систему", "новые шаги в регламентах и существующих KPI, чтобы новый путь был проще старого."]]
+};
+
+/* ===================== Хранение ===================== */
+
+var KEY_DRAFT = "triada15:draft";
+var KEY_HIST  = "triada15:history";
+var storageOk = true;
+var memoryStore = {};
+
+function readJSON(key, fallback){
+  try{
+    var raw = window.localStorage.getItem(key);
+    if(raw) return JSON.parse(raw);
+  }catch(e){ storageOk = false; }
+  return Object.prototype.hasOwnProperty.call(memoryStore, key) ? JSON.parse(memoryStore[key]) : fallback;
+}
+function writeJSON(key, value){
+  var raw = JSON.stringify(value);
+  memoryStore[key] = raw;
+  try{ window.localStorage.setItem(key, raw); }
+  catch(e){ storageOk = false; }
+}
+function removeKey(key){
+  delete memoryStore[key];
+  try{ window.localStorage.removeItem(key); }catch(e){}
+}
+
+function loadHistory(){
+  var h = readJSON(KEY_HIST, []);
+  return Array.isArray(h) ? h.filter(isCompleteResult) : [];
+}
+function isCompleteResult(r){
+  if(!r || !r.answers) return false;
+  return ELEMENTS.every(function(el){
+    return el.q.every(function(q){
+      var a = r.answers[q.code];
+      return a && typeof a.v === "number" && a.v >= 0 && a.v <= 3;
+    });
+  });
+}
+
+var state = {
+  screen:"start",
+  block:0,
+  project:"",
+  people:["","",""],
+  answers:{},
+  viewId:null,
+  compareId:null
+};
+
+function loadDraft(){
+  var d = readJSON(KEY_DRAFT, null);
+  if(!d) return;
+  state.block   = (typeof d.block === "number" && d.block >= 0 && d.block < 5) ? d.block : 0;
+  state.project = typeof d.project === "string" ? d.project : "";
+  state.people  = Array.isArray(d.people) ? [0,1,2].map(function(i){ return typeof d.people[i] === "string" ? d.people[i] : ""; }) : ["","",""];
+  state.answers = (d.answers && typeof d.answers === "object") ? d.answers : {};
+}
+function saveDraft(){
+  writeJSON(KEY_DRAFT, {block:state.block, project:state.project, people:state.people, answers:state.answers});
+}
+
+/* ===================== Расчёт ===================== */
+
+function answeredCount(answers){
+  var n = 0;
+  ELEMENTS.forEach(function(el){ el.q.forEach(function(q){
+    var a = answers[q.code]; if(a && typeof a.v === "number") n++;
+  }); });
+  return n;
+}
+
+function compute(answers){
+  var els = {};
+  var order = ELEMENTS.map(function(e){ return e.id; });
+  ELEMENTS.forEach(function(el){
+    var vals = el.q.map(function(q){ return answers[q.code].v; });
+    var ev = el.q.reduce(function(s, q){ return s + (answers[q.code].ev ? 1 : 0); }, 0);
+    var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+    els[el.id] = {vals:vals, score:mn, max:mx, spread:mx - mn, ev:ev, pattern:patternOf(vals)};
+  });
+  var minScore = Math.min.apply(null, order.map(function(id){ return els[id].score; }));
+  var byMin = order.filter(function(id){ return els[id].score === minScore; });
+  var bottleneck = byMin[0];
+  var boomerang = els.A.score === 3 && els.D.score === 3 && (els.K.score <= 1 || els.Ab.score <= 1);
+  if(boomerang){ bottleneck = els.K.score <= els.Ab.score ? "K" : "Ab"; }
+  var evTotal = order.reduce(function(s, id){ return s + els[id].ev; }, 0);
+  return {
+    els:els,
+    minScore:minScore,
+    bottleneck: minScore === 3 ? null : bottleneck,
+    tied: boomerang ? [] : byMin.slice(1),
+    boomerang:boomerang,
+    evTotal:evTotal
+  };
+}
+
+function patternOf(vals){
+  var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+  if(mx - mn <= 1) return {type:"even"};
+  var lows = [];
+  vals.forEach(function(v, i){ if(v === mn) lows.push(i); });
+  if(lows.length === 1) return {type:["words","deeds","env"][lows[0]]};
+  return {type:"twoLow", high: vals.indexOf(mx)};
+}
+
+function patternText(p){
+  if(p.type === "twoLow"){
+    return {title:"Один канал заметно выше", text:"Выше остальных — «" + LEVELS[p.high].short.toLowerCase() + "». Балл определяют два отстающих канала — начинать стоит с них."};
+  }
+  return PATTERNS[p.type];
+}
+
+function evidenceLevel(n){
+  if(n >= 11) return "Радар можно считать диагнозом.";
+  if(n >= 6)  return "Это рабочая гипотеза — её стоит проверить.";
+  return "Пока это догадка, а не измерение.";
+}
+
+function elById(id){ for(var i=0;i<ELEMENTS.length;i++){ if(ELEMENTS[i].id === id) return ELEMENTS[i]; } return null; }
+
+/* ===================== Помощники ===================== */
+
+var app = document.getElementById("app");
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];
+  });
+}
+function fmtDate(iso){
+  try{
+    return new Date(iso).toLocaleString("ru-RU", {day:"numeric", month:"long", year:"numeric", hour:"2-digit", minute:"2-digit"});
+  }catch(e){ return iso; }
+}
+function shortDate(iso){
+  try{
+    return new Date(iso).toLocaleDateString("ru-RU", {day:"numeric", month:"long"});
+  }catch(e){ return iso; }
+}
+function zoneChip(score){
+  return '<span class="zone-chip zc' + score + '">Балл ' + score + ' · ' + ZONES[score].name + '</span>';
+}
+function peopleList(people){
+  return (people || []).map(function(p){ return (p || "").trim(); }).filter(Boolean);
+}
+function scrollTop(){
+  try{ window.scrollTo({top:0, behavior:"instant"}); }catch(e){ window.scrollTo(0,0); }
+}
+
+/* ===================== Экран 1: начало ===================== */
+
+function renderStart(){
+  var hist = loadHistory();
+  var done = answeredCount(state.answers);
+  var hasDraft = done > 0;
+
+  var html = '';
+  html += '<p class="eyebrow">ADKAR-радар</p>';
+  html += '<h1>«Триада-15»: где застревает ваше изменение</h1>';
+  html += '<p class="lead">15 вопросов, 12–15 минут. Каждый элемент модели ADKAR проверяется по трём каналам: что люди говорят, что они делают и как ведёт себя команда.</p>';
+
+  if(!storageOk){
+    html += '<div class="note" style="margin-bottom:16px">Этот браузер не разрешает сохранять данные. Анкету можно пройти, но результат пропадёт после закрытия страницы. Обычно так бывает в режиме «инкогнито».</div>';
+  }
+
+  html += '<div class="card">';
+  html += '<h2>Как отвечать</h2>';
+  html += '<ul>';
+  html += '<li>Думайте про <b>последние две недели</b>, а не про весь проект.</li>';
+  html += '<li>Отвечайте про <b>трёх конкретных людей</b> из вашего проекта — впишите их ниже, они будут видны рядом с вопросами.</li>';
+  html += '<li>Если подходит несколько вариантов — выбирайте <b>худший</b>.</li>';
+  html += '<li>Под каждым вопросом отметьте «Могу назвать конкретный случай», если за ответом стоит реальный пример. Честная отметка важнее высокой оценки.</li>';
+  html += '</ul>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<h2>Ваш проект</h2>';
+  html += '<p class="small">Эти поля можно не заполнять.</p>';
+  html += '<label class="field"><span>Название проекта изменений</span><input type="text" data-field="project" value="' + esc(state.project) + '" autocomplete="off" maxlength="120"></label>';
+  for(var i=0;i<3;i++){
+    html += '<label class="field"><span>Ключевой человек ' + (i+1) + '</span><input type="text" data-field="person" data-idx="' + i + '" value="' + esc(state.people[i]) + '" autocomplete="off" maxlength="60"></label>';
+  }
+  html += '</div>';
+
+  html += '<div class="stack">';
+  if(hasDraft){
+    html += '<button class="btn primary block" data-action="continue">Продолжить анкету · отвечено ' + done + ' из 15</button>';
+    html += '<button class="btn block" data-action="fresh">Начать с чистого листа</button>';
+  }else{
+    html += '<button class="btn primary block" data-action="begin">Начать</button>';
+  }
+  if(hist.length){
+    html += '<button class="btn block" data-action="last">Посмотреть последний результат</button>';
+  }
+  html += '</div>';
+
+  app.innerHTML = html;
+}
+
+/* ===================== Экран 2: вопросы ===================== */
+
+function renderQuiz(){
+  var el = ELEMENTS[state.block];
+  var done = answeredCount(state.answers);
+  var people = peopleList(state.people);
+
+  var html = '';
+  html += '<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="15" aria-valuenow="' + done + '"><div id="bar" style="width:' + (done/15*100) + '%"></div></div>';
+  html += '<p class="step" id="step">Блок ' + (state.block+1) + ' из 5 · отвечено ' + done + ' из 15</p>';
+  html += '<h1 class="el-title"><span class="el-id">' + el.id + '</span>' + el.ru + ' <span class="el-en">' + el.en + '</span></h1>';
+  html += '<p class="lead">' + el.ask + '</p>';
+  html += '<p class="hint">Последние две недели' + (people.length ? ', про: <b>' + esc(people.join(", ")) + '</b>' : '') + '. Если подходит несколько вариантов — выбирайте худший.</p>';
+
+  el.q.forEach(function(q, li){
+    var a = state.answers[q.code] || {};
+    html += '<div class="q" id="q-' + q.code + '" role="radiogroup" aria-labelledby="qt-' + q.code + '">';
+    html += '<span class="q-level">' + LEVELS[li].short + ' · ' + LEVELS[li].long + '</span>';
+    html += '<span class="q-text" id="qt-' + q.code + '">' + q.text + '</span>';
+    html += '<div class="opts">';
+    q.o.forEach(function(text, v){
+      var on = a.v === v;
+      html += '<label class="opt' + (on ? ' on' : '') + '">';
+      html += '<input type="radio" name="' + q.code + '" value="' + v + '"' + (on ? ' checked' : '') + '>';
+      html += '<span class="num" aria-hidden="true">' + v + '</span><span>' + text + '</span>';
+      html += '</label>';
+    });
+    html += '</div>';
+    html += '<label class="ev' + (a.ev ? ' on' : '') + '"><input type="checkbox" data-ev="' + q.code + '"' + (a.ev ? ' checked' : '') + '><span class="box" aria-hidden="true"></span><span>Могу назвать конкретный случай</span></label>';
+    html += '<p class="q-err" hidden>Выберите один из вариантов.</p>';
+    html += '</div>';
+  });
+
+  html += '<div class="navrow">';
+  html += '<button class="btn" data-action="back">Назад</button>';
+  html += '<button class="btn primary" data-action="next">' + (state.block === 4 ? 'Показать результат' : 'Дальше') + '</button>';
+  html += '</div>';
+
+  app.innerHTML = html;
+}
+
+function updateProgress(){
+  var done = answeredCount(state.answers);
+  var bar = document.getElementById("bar");
+  var step = document.getElementById("step");
+  if(bar) bar.style.width = (done/15*100) + "%";
+  if(step) step.textContent = "Блок " + (state.block+1) + " из 5 · отвечено " + done + " из 15";
+}
+
+/* ===================== Экран 3: результат ===================== */
+
+function radarSVG(c, p){
+  var W = 520, H = 420, cx = 260, cy = 218, R = 140;
+  function ang(i){ return (-90 + i*72) * Math.PI / 180; }
+  function pt(i, r){ return [cx + r*Math.cos(ang(i)), cy + r*Math.sin(ang(i))]; }
+  function rad(v){ return (v + 0.5) / 4 * R; }
+  function f(n){ return n.toFixed(1); }
+  function ringPoly(r){
+    return ELEMENTS.map(function(_, i){ var q = pt(i, r); return f(q[0]) + "," + f(q[1]); }).join(" ");
+  }
+  function scorePoly(comp){
+    return ELEMENTS.map(function(e, i){ var q = pt(i, rad(comp.els[e.id].score)); return f(q[0]) + "," + f(q[1]); }).join(" ");
+  }
+
+  var s = '<svg class="radar" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-labelledby="radar-title">';
+  s += '<title id="radar-title">Лепестковая диаграмма: ' + ELEMENTS.map(function(e){ return e.ru + " — балл " + c.els[e.id].score + ", разброс " + c.els[e.id].spread; }).join("; ") + '</title>';
+
+  for(var k = 4; k >= 1; k--){
+    s += '<polygon class="ring z' + (k-1) + '" points="' + ringPoly(k*R/4) + '"/>';
+  }
+  ELEMENTS.forEach(function(_, i){
+    var q = pt(i, R);
+    s += '<line class="axis" x1="' + cx + '" y1="' + cy + '" x2="' + f(q[0]) + '" y2="' + f(q[1]) + '"/>';
+  });
+  for(var v = 0; v <= 3; v++){
+    var rq = pt(0, rad(v));
+    s += '<text class="ringnum" x="' + f(rq[0] + 8) + '" y="' + f(rq[1] + 4) + '">' + v + '</text>';
+  }
+
+  if(p){ s += '<polygon class="poly-prev" points="' + scorePoly(p) + '"/>'; }
+  s += '<polygon class="poly-cur" points="' + scorePoly(c) + '"/>';
+
+  ELEMENTS.forEach(function(e, i){
+    var d = c.els[e.id];
+    var a = ang(i);
+    if(d.spread > 0){
+      var p1 = pt(i, rad(d.score)), p2 = pt(i, rad(d.max));
+      s += '<line class="spread" x1="' + f(p1[0]) + '" y1="' + f(p1[1]) + '" x2="' + f(p2[0]) + '" y2="' + f(p2[1]) + '"/>';
+    }
+    var nx = -Math.sin(a), ny = Math.cos(a);
+    d.vals.forEach(function(val, li){
+      var off = (li - 1) * 13;
+      var base = pt(i, rad(val));
+      var x = base[0] + nx*off, y = base[1] + ny*off;
+      if(li === 0){
+        s += '<circle class="mk" cx="' + f(x) + '" cy="' + f(y) + '" r="4.5"/>';
+      }else if(li === 1){
+        s += '<rect class="mk" x="' + f(x-4) + '" y="' + f(y-4) + '" width="8" height="8"/>';
+      }else{
+        s += '<polygon class="mk" points="' + f(x) + ',' + f(y-5.5) + ' ' + f(x-5) + ',' + f(y+4) + ' ' + f(x+5) + ',' + f(y+4) + '"/>';
+      }
+    });
+  });
+
+  ELEMENTS.forEach(function(e, i){
+    var d = c.els[e.id];
+    var q = pt(i, rad(d.score));
+    if(c.bottleneck === e.id){
+      s += '<circle class="bn-ring" cx="' + f(q[0]) + '" cy="' + f(q[1]) + '" r="14"/>';
+    }
+    s += '<circle class="dot" cx="' + f(q[0]) + '" cy="' + f(q[1]) + '" r="6.5"/>';
+  });
+
+  ELEMENTS.forEach(function(e, i){
+    var d = c.els[e.id];
+    var a = ang(i);
+    var lp = pt(i, R + 22);
+    var cosA = Math.cos(a), sinA = Math.sin(a);
+    var anchor = cosA > 0.3 ? "start" : (cosA < -0.3 ? "end" : "middle");
+    var lines = [
+      {cls:"lab", t:e.ru},
+      {cls:"lab-strong", t:e.id + ": " + d.score}
+    ];
+    if(c.bottleneck === e.id) lines.push({cls:"lab-bn", t:"узкое горлышко"});
+    var lh = 18, y0;
+    if(sinA < -0.9)      y0 = lp[1] - (lines.length - 1) * lh;
+    else if(sinA > 0.5)  y0 = lp[1] + 12;
+    else                 y0 = lp[1] - (lines.length - 1) * lh / 2 + 5;
+    lines.forEach(function(ln, j){
+      s += '<text class="' + ln.cls + '" x="' + f(lp[0]) + '" y="' + f(y0 + j*lh) + '" text-anchor="' + anchor + '">' + esc(ln.t) + '</text>';
+    });
+  });
+
+  s += '</svg>';
+  return s;
+}
+
+function legendHTML(hasPrev){
+  var h = '<div class="legend">';
+  h += '<span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5" style="fill:var(--text2)"/></svg>слова</span>';
+  h += '<span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="3.5" width="9" height="9" style="fill:var(--text2)"/></svg>дела</span>';
+  h += '<span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><polygon points="8,2 2.5,13 13.5,13" style="fill:var(--text2)"/></svg>среда</span>';
+  h += '<span><svg width="26" height="16" viewBox="0 0 26 16" aria-hidden="true"><line x1="4" y1="8" x2="22" y2="8" style="stroke:var(--text);stroke-opacity:.16;stroke-width:10;stroke-linecap:round"/></svg>разброс</span>';
+  h += '<span><svg width="26" height="16" viewBox="0 0 26 16" aria-hidden="true"><line x1="1" y1="8" x2="25" y2="8" style="stroke:var(--accent);stroke-width:2.5"/></svg>балл сейчас</span>';
+  if(hasPrev){
+    h += '<span><svg width="26" height="16" viewBox="0 0 26 16" aria-hidden="true"><line x1="1" y1="8" x2="25" y2="8" style="stroke:var(--muted);stroke-width:2;stroke-dasharray:5 4"/></svg>для сравнения</span>';
+  }
+  h += '</div>';
+  h += '<div class="legend">';
+  for(var z = 0; z < 4; z++){
+    h += '<span><i class="sw" style="background:var(--z' + z + ');border:1px solid var(--z' + z + 's)"></i>' + z + ' — ' + ZONES[z].name.replace(" зона","") + '</span>';
+  }
+  h += '</div>';
+  return h;
+}
+
+function deltaHTML(now, before){
+  var d = now - before;
+  if(d > 0) return '<span class="delta-up">↑ +' + d + '</span>';
+  if(d < 0) return '<span class="delta-down">↓ −' + Math.abs(d) + '</span>';
+  return '<span class="delta-eq">без изменений</span>';
+}
+
+function renderResult(){
+  var hist = loadHistory();
+  if(!hist.length){ state.screen = "start"; render(); return; }
+
+  var cur = null;
+  for(var i = 0; i < hist.length; i++){ if(hist[i].id === state.viewId) cur = hist[i]; }
+  if(!cur) cur = hist[hist.length - 1];
+  var curIdx = hist.indexOf(cur);
+
+  var prev = null;
+  if(state.compareId !== null){
+    for(var j = 0; j < hist.length; j++){ if(hist[j].id === state.compareId) prev = hist[j]; }
+  }
+  if(!prev && state.compareId === null && curIdx > 0) prev = hist[curIdx - 1];
+  if(prev && prev.id === cur.id) prev = null;
+
+  var c = compute(cur.answers);
+  var p = prev ? compute(prev.answers) : null;
+  var people = peopleList(cur.people);
+
+  var html = '';
+
+  /* шапка */
+  html += '<p class="eyebrow">Результат</p>';
+  html += '<h1>' + (cur.project ? esc(cur.project) : 'Ваш ADKAR-радар') + '</h1>';
+  html += '<p class="lead">' + fmtDate(cur.date) + (people.length ? ' · про: ' + esc(people.join(", ")) : '') + '</p>';
+
+  /* главный вывод */
+  if(c.bottleneck){
+    var bnEl = elById(c.bottleneck), bn = c.els[c.bottleneck];
+    html += '<div class="card verdict alert">';
+    html += '<h2>Узкое горлышко — ' + bnEl.ru + ' (' + bnEl.id + ')</h2>';
+    html += '<p>' + zoneChip(bn.score) + '</p>';
+    html += '<p>' + SCORE_TEXT[bnEl.id][bn.score] + '</p>';
+    if(c.boomerang){
+      html += '<p><b>Эффект бумеранга.</b> Осознание и желание на максимуме, а знание или способность провалены: идею продали, а людей не научили. Без поддержки энтузиазм сгорит об ошибки, и желание рухнет ниже стартового. Снимите давление результатом, пока «' + bnEl.ru.toLowerCase() + '» не выйдет хотя бы на 2.</p>';
+      if(bn.score > c.minScore){
+        html += '<p class="small">Балл ниже есть и у других элементов, но при таком профиле первым лечится именно этот.</p>';
+      }
+    }else if(c.tied.length){
+      html += '<p class="small">Такой же балл у: ' + c.tied.map(function(id){ return elById(id).ru; }).join(", ") + '. Выбран «' + bnEl.ru + '», потому что он стоит раньше в последовательности A → D → K → Ab → R: ранний барьер обрушивает все следующие.</p>';
+    }
+    html += '<p>Рекомендации по этому элементу — первыми в разделе «Что делать» внизу страницы.</p>';
+    html += '</div>';
+  }else{
+    html += '<div class="card verdict">';
+    html += '<h2>Выраженного узкого горлышка нет</h2>';
+    html += '<p>' + zoneChip(3) + '</p>';
+    html += '<p>Все элементы в зелёной зоне. Главная задача сейчас — не потерять достигнутое: поддерживать ритуалы признания и регулярно повторять замер.</p>';
+    html += '</div>';
+  }
+
+  if(prev){
+    html += '<div class="note no-print" style="margin-bottom:16px">Для сравнения показан результат от <b>' + fmtDate(prev.date) + '</b> — пунктиром на диаграмме и в последней колонке таблицы.</div>';
+  }
+
+  /* диаграмма */
+  html += '<div class="card radar-card">';
+  html += radarSVG(c, p);
+  html += legendHTML(!!p);
+  html += '</div>';
+
+  /* сводная таблица */
+  html += '<h2 style="margin-top:28px">Сводная таблица</h2>';
+  html += '<div class="tablewrap"><table>';
+  html += '<thead><tr><th>Элемент</th><th>Слова</th><th>Дела</th><th>Среда</th><th>Балл</th><th>Разброс</th><th>Случаи</th>' + (p ? '<th>Было</th>' : '') + '</tr></thead><tbody>';
+  ELEMENTS.forEach(function(e){
+    var d = c.els[e.id];
+    html += '<tr' + (c.bottleneck === e.id ? ' class="is-bn"' : '') + '>';
+    html += '<td><b>' + e.id + '</b> ' + e.ru + '</td>';
+    d.vals.forEach(function(v){
+      html += '<td' + (d.spread >= 2 && v === d.score ? ' class="cell-low"' : '') + '>' + v + '</td>';
+    });
+    html += '<td><span class="zone-chip zc' + d.score + '">' + d.score + '</span></td>';
+    html += '<td>' + d.spread + '</td>';
+    html += '<td>' + d.ev + ' из 3</td>';
+    if(p){
+      var pd = p.els[e.id];
+      html += '<td>' + pd.score + '<br>' + deltaHTML(d.score, pd.score) + '</td>';
+    }
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  html += '<p class="small" style="margin-top:8px">Балл — самый низкий из трёх каналов. Разброс — разница между самым высоким и самым низким. Красным выделены отстающие каналы, если разброс 2 и больше.</p>';
+
+  /* индекс достоверности */
+  var missing = [];
+  ELEMENTS.forEach(function(e){ e.q.forEach(function(q){ if(!cur.answers[q.code].ev) missing.push(q); }); });
+  html += '<div class="card" style="margin-top:20px">';
+  html += '<h2>Индекс достоверности: ' + c.evTotal + ' из 15</h2>';
+  html += '<p>' + evidenceLevel(c.evTotal);
+  if(p) html += ' В прошлый раз: ' + p.evTotal + ' из 15.';
+  html += '</p>';
+  if(missing.length){
+    html += '<p class="sub">Вопросы, где вы не смогли назвать конкретный случай, — это готовый список того, что стоит проверить в ближайшие две недели:</p>';
+    html += '<ul>';
+    missing.forEach(function(q){ html += '<li><b>' + q.code + '</b> — ' + q.text + '</li>'; });
+    html += '</ul>';
+  }else{
+    html += '<p>За каждым ответом стоит реальный пример.</p>';
+  }
+  html += '</div>';
+
+  /* карточки по элементам */
+  html += '<h2 style="margin-top:28px">Вывод по каждому элементу</h2>';
+  ELEMENTS.forEach(function(e){
+    var d = c.els[e.id];
+    var pt = patternText(d.pattern);
+    var isBn = c.bottleneck === e.id;
+    html += '<div class="card elcard' + (isBn ? ' is-bn' : '') + '">';
+    html += '<h3><span>' + e.id + ' · ' + e.ru + '</span>' + (isBn ? ' <span class="bn-tag">узкое горлышко</span>' : '') + '</h3>';
+    html += '<div class="meta">' + zoneChip(d.score) + '<span class="pill">Разброс ' + d.spread + '</span><span class="pill">Случаев ' + d.ev + ' из 3</span>';
+    if(p) html += '<span class="pill">Было ' + p.els[e.id].score + ' · ' + deltaHTML(d.score, p.els[e.id].score) + '</span>';
+    html += '</div>';
+    html += '<div class="levels">';
+    d.vals.forEach(function(v, li){
+      html += '<div class="lvl' + (d.spread >= 2 && v === d.score ? ' low' : '') + '"><span class="ln">' + LEVELS[li].short + '</span><span class="lv">' + v + '</span></div>';
+    });
+    html += '</div>';
+    html += '<p>' + SCORE_TEXT[e.id][d.score] + '</p>';
+    html += '<p class="sub"><b>' + pt.title + '.</b> ' + pt.text + '</p>';
+    if(d.ev < 2) html += '<p class="small">Мало конкретных случаев — вывод по этому элементу стоит проверить.</p>';
+    html += '</div>';
+  });
+
+  /* кнопки */
+  html += '<div class="stack no-print" style="margin-top:24px">';
+  html += '<button class="btn primary block" data-action="restart">Пройти заново</button>';
+  html += '<p class="small" style="text-align:center;margin:-4px 0 4px">Этот результат сохранится — в следующий раз вы увидите, что изменилось.</p>';
+  html += '<button class="btn block" data-action="print">Распечатать или сохранить в PDF</button>';
+  html += '</div>';
+
+  /* история */
+  if(hist.length > 1){
+    html += '<div class="card no-print" style="margin-top:24px">';
+    html += '<h2>История прохождений</h2>';
+    html += '<p class="small">Выберите, с каким результатом сравнивать.</p>';
+    html += '<ul class="hist">';
+    hist.slice().reverse().forEach(function(h){
+      var hc = compute(h.answers);
+      var scores = ELEMENTS.map(function(e){ return e.id + " " + hc.els[e.id].score; }).join(" · ");
+      html += '<li>';
+      html += '<span class="hd">' + shortDate(h.date) + '</span>';
+      html += '<span class="hs">' + (h.project ? esc(h.project) + '<br>' : '') + scores + '</span>';
+      if(h.id === cur.id){
+        html += '<span class="tag">показан сейчас</span>';
+      }else if(prev && h.id === prev.id){
+        html += '<span class="tag">идёт сравнение</span>';
+      }else{
+        html += '<button class="btn" data-action="compare" data-id="' + h.id + '">Сравнить</button>';
+      }
+      html += '</li>';
+    });
+    html += '</ul>';
+    if(prev){
+      html += '<button class="btn quiet" data-action="nocompare">Убрать сравнение</button>';
+    }
+    html += '</div>';
+  }
+
+  /* интерпретация */
+  html += '<h2 style="margin-top:36px">Как читать результат</h2>';
+
+  html += '<div class="card">';
+  html += '<h3>Зоны по баллу</h3>';
+  html += '<div class="zones">';
+  for(var z = 0; z < 4; z++){
+    html += '<div class="zc' + z + '"><b class="zn">' + z + '</b><span><b>' + ZONES[z].title + '.</b> ' + ZONES[z].text + '</span></div>';
+  }
+  html += '</div>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<h3>Как читать разброс</h3>';
+  html += '<p class="sub">Балл говорит, насколько плохо. Разброс говорит, чем именно «болеет» элемент, — и от этого зависит, что делать.</p>';
+  ["even","deeds","env","words"].forEach(function(k){
+    html += '<div class="pat"><h3>' + (k === "even" ? "Разброс 0–1: " : "Разброс 2–3, ") + PATTERNS[k].title.charAt(0).toLowerCase() + PATTERNS[k].title.slice(1) + '</h3><p>' + PATTERNS[k].text + '</p></div>';
+  });
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<h3>Как выбирается узкое горлышко</h3>';
+  html += '<p>Берётся элемент с самым низким баллом. Если таких несколько — тот, что раньше в последовательности A → D → K → Ab → R: пока не решён ранний барьер, чинить следующие бесполезно.</p>';
+  html += '<p>Исключение — «эффект бумеранга»: если осознание и желание по 3, а знание или способность 0–1, узким горлышком автоматически становится провалившийся из них.</p>';
+  html += '</div>';
+
+  /* интервенции */
+  html += '<h2 style="margin-top:36px">Что делать: интервенции по элементам</h2>';
+  html += '<p class="sub">Выберите одно действие, которое займёт не больше двух часов, и проверьте его результат через две недели.</p>';
+  var ids = ELEMENTS.map(function(e){ return e.id; });
+  if(c.bottleneck){ ids = [c.bottleneck].concat(ids.filter(function(id){ return id !== c.bottleneck; })); }
+  ids.forEach(function(id){
+    var e = elById(id);
+    var isBn = c.bottleneck === id;
+    html += '<details class="int' + (isBn ? ' is-bn' : '') + '"' + (isBn ? ' open' : '') + '>';
+    html += '<summary><span>' + e.id + ' · ' + e.ru + '</span>' + (isBn ? '<span class="bn-tag">ваше узкое горлышко</span>' : '') + '</summary>';
+    html += '<div class="body"><ul>';
+    INTERVENTIONS[id].forEach(function(it){ html += '<li><b>' + it[0] + '</b> — ' + it[1] + '</li>'; });
+    html += '</ul></div></details>';
+  });
+
+  html += '<div class="stack no-print" style="margin-top:28px">';
+  html += '<button class="btn quiet" data-action="wipe">Удалить все мои данные с этого устройства</button>';
+  html += '</div>';
+
+  app.innerHTML = html;
+}
+
+/* ===================== Переходы ===================== */
+
+function render(){
+  if(state.screen === "quiz") renderQuiz();
+  else if(state.screen === "result") renderResult();
+  else renderStart();
+}
+
+function go(screen){
+  state.screen = screen;
+  render();
+  scrollTop();
+}
+
+function blockMissing(){
+  return ELEMENTS[state.block].q.filter(function(q){
+    var a = state.answers[q.code];
+    return !(a && typeof a.v === "number");
+  });
+}
+
+function finish(){
+  var hist = loadHistory();
+  var result = {
+    id: Date.now(),
+    date: new Date().toISOString(),
+    project: state.project.trim(),
+    people: state.people.slice(),
+    answers: JSON.parse(JSON.stringify(state.answers))
+  };
+  hist.push(result);
+  writeJSON(KEY_HIST, hist);
+  state.answers = {};
+  state.block = 0;
+  saveDraft();
+  state.viewId = result.id;
+  state.compareId = null;
+  go("result");
+}
+
+app.addEventListener("input", function(e){
+  var t = e.target;
+  if(t.dataset.field === "project"){ state.project = t.value; saveDraft(); }
+  if(t.dataset.field === "person"){ state.people[+t.dataset.idx] = t.value; saveDraft(); }
+});
+
+app.addEventListener("change", function(e){
+  var t = e.target;
+  if(t.type === "radio"){
+    var code = t.name;
+    var prevA = state.answers[code] || {ev:false};
+    state.answers[code] = {v:+t.value, ev:!!prevA.ev};
+    var box = document.getElementById("q-" + code);
+    if(box){
+      Array.prototype.forEach.call(box.querySelectorAll("label.opt"), function(l){
+        l.classList.toggle("on", l.querySelector("input").checked);
+      });
+      box.classList.remove("missing");
+      var err = box.querySelector(".q-err"); if(err) err.hidden = true;
+    }
+    saveDraft();
+    updateProgress();
+  }
+  if(t.type === "checkbox" && t.dataset.ev){
+    var c2 = t.dataset.ev;
+    var a = state.answers[c2] || {v:null};
+    state.answers[c2] = {v:a.v, ev:t.checked};
+    t.closest("label").classList.toggle("on", t.checked);
+    saveDraft();
+  }
+});
+
+app.addEventListener("click", function(e){
+  var b = e.target.closest("[data-action]");
+  if(!b) return;
+  var action = b.dataset.action;
+
+  if(action === "begin" || action === "continue"){
+    go("quiz");
+  }
+  else if(action === "fresh"){
+    if(window.confirm("Начать анкету заново? Текущие ответы будут стёрты. Сохранённые результаты останутся.")){
+      state.answers = {}; state.block = 0; saveDraft(); go("quiz");
+    }
+  }
+  else if(action === "last"){
+    state.viewId = null; state.compareId = null; go("result");
+  }
+  else if(action === "back"){
+    if(state.block === 0){ go("start"); }
+    else{ state.block--; saveDraft(); go("quiz"); }
+  }
+  else if(action === "next"){
+    var miss = blockMissing();
+    if(miss.length){
+      miss.forEach(function(q){
+        var box = document.getElementById("q-" + q.code);
+        if(box){ box.classList.add("missing"); var err = box.querySelector(".q-err"); if(err) err.hidden = false; }
+      });
+      var first = document.getElementById("q-" + miss[0].code);
+      if(first){
+        first.scrollIntoView({behavior:"smooth", block:"center"});
+        var inp = first.querySelector("input"); if(inp) setTimeout(function(){ inp.focus({preventScroll:true}); }, 300);
+      }
+      return;
+    }
+    if(state.block < 4){ state.block++; saveDraft(); go("quiz"); }
+    else{ finish(); }
+  }
+  else if(action === "restart"){
+    state.answers = {}; state.block = 0; saveDraft(); go("start");
+  }
+  else if(action === "print"){
+    window.print();
+  }
+  else if(action === "compare"){
+    state.compareId = +b.dataset.id; render();
+    var radar = document.querySelector(".radar-card");
+    if(radar) radar.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+  else if(action === "nocompare"){
+    state.compareId = -1; render();
+  }
+  else if(action === "wipe"){
+    if(window.confirm("Удалить все ответы и всю историю результатов с этого устройства? Восстановить их будет нельзя.")){
+      removeKey(KEY_DRAFT); removeKey(KEY_HIST);
+      state.answers = {}; state.block = 0; state.project = ""; state.people = ["","",""];
+      state.viewId = null; state.compareId = null;
+      go("start");
+    }
+  }
+});
+
+window.addEventListener("beforeprint", function(){
+  Array.prototype.forEach.call(document.querySelectorAll("details.int"), function(d){ d.open = true; });
+});
+
+/* ===================== Запуск ===================== */
+
+loadDraft();
+render();
+
+})();
+</script>
+</body>
+</html>
