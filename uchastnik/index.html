@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Я участник изменений</title>
+<style>
+  :root{
+    --bg:#f4f4f2; --card:#ffffff; --text:#2b2f33; --muted:#6b7178; --line:#dcdedf;
+    --accent:#4a6178; --accent-soft:#e8edf2;
+    --z0:#fde4e4; --z1:#ffecd9; --z2:#fdf5cc; --z3:#dcf6e5;
+    --z0i:#b4232c; --z1i:#b5520e; --z2i:#8a6a05; --z3i:#1f7a46;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#16181b; --card:#202328; --text:#e8eaec; --muted:#a0a6ad; --line:#353a40;
+      --accent:#8fa9c4; --accent-soft:#2a323b;
+      --z0:#4a1f22; --z1:#4a3020; --z2:#46401c; --z3:#1f3d2b;
+      --z0i:#ff9b9b; --z1i:#ffba85; --z2i:#f0d670; --z3i:#8be0ae;
+    }
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:18px;line-height:1.55;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 16px 64px;}
+  a{color:var(--accent);}
+  .back{display:inline-block;margin-bottom:8px;font-size:16px;}
+  h1{font-size:28px;line-height:1.25;margin:8px 0 14px;font-weight:600;}
+  h2{font-size:22px;margin:0 0 4px;font-weight:600;}
+  h3{font-size:18px;margin:18px 0 8px;font-weight:600;}
+  p{margin:0 0 12px;}
+  .muted{color:var(--muted);}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 18px;margin:0 0 18px;}
+  .tag{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  .q{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);}
+  .q:first-of-type{border-top:0;padding-top:0;}
+  .q-title{font-weight:600;margin-bottom:8px;}
+  .q-chan{font-size:14px;color:var(--muted);margin-bottom:4px;}
+  label.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;margin:6px 0;border:1px solid var(--line);border-radius:10px;cursor:pointer;}
+  label.opt input{margin-top:5px;flex:none;width:18px;height:18px;}
+  label.opt.on{border-color:var(--accent);background:var(--accent-soft);}
+  input[type=text]{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--text);}
+  button{font:inherit;cursor:pointer;border-radius:12px;padding:14px 20px;border:1px solid var(--accent);}
+  .primary{background:var(--accent);color:#fff;font-weight:600;width:100%;}
+  .secondary{background:transparent;color:var(--accent);margin:6px 6px 0 0;}
+  .msg{color:var(--z0i);margin-top:10px;min-height:1em;}
+  table{width:100%;border-collapse:collapse;font-size:16px;}
+  th,td{border:1px solid var(--line);padding:8px;text-align:center;}
+  th{background:var(--accent-soft);font-weight:600;}
+  td.el{text-align:left;}
+  .z0{background:var(--z0);color:var(--z0i);} .z1{background:var(--z1);color:var(--z1i);}
+  .z2{background:var(--z2);color:var(--z2i);} .z3{background:var(--z3);color:var(--z3i);}
+  .big{font-size:24px;font-weight:600;margin:4px 0 8px;}
+  .note{background:var(--accent-soft);border-radius:10px;padding:12px 14px;margin:12px 0;}
+  .hidden{display:none;}
+  .table-wrap{overflow-x:auto;}
+  @media print{ .noprint{display:none !important;} body{background:#fff;} .card{border:0;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back noprint" href="../index.html">← Все опросники</a>
+
+  <div id="screen-form">
+    <h1>Я участник изменений</h1>
+    <div class="card">
+      <p>Это короткая анкета о том, как у вас идёт одно конкретное изменение в работе: новая система, регламент, процесс, формат работы. Ответы помогут увидеть, что сейчас мешает больше всего, что можно сделать самому и о чём стоит попросить руководителя.</p>
+      <p>Отвечайте про <b>последние две недели</b> и про <b>одно изменение</b>, которое касается вашей работы. Правильных ответов нет: анкета оценивает не вас, а то, где застревает изменение. Если подходят два варианта, выберите тот, что чаще встречался за эти две недели.</p>
+      <p class="muted">15 вопросов, 5–7 минут. Анкета анонимна: она не спрашивает имя, должность и подразделение. Ответы остаются только в этом браузере и никуда не отправляются, результат видите только вы.</p>
+      <label for="change" class="q-title" style="display:block;margin-top:8px">Изменение, о котором отвечаю (можно не заполнять)</label>
+      <input type="text" id="change" maxlength="120" placeholder="Например: новая система учёта задач">
+    </div>
+    <form id="form" novalidate></form>
+    <div class="card noprint">
+      <button type="button" class="primary" id="submit">Показать результат</button>
+      <div class="msg" id="msg" role="alert"></div>
+    </div>
+  </div>
+
+  <div id="screen-result" class="hidden"></div>
+</div>
+
+<script>
+var ELEMENTS = [
+  {id:"A", en:"Awareness", ru:"Понимаю ли я, зачем", q:[
+    {code:"A1", ch:0, t:"Если коллега из другого отдела спросит, зачем нам это изменение, что вы ответите?", o:["«Чья-то прихоть» или «для отчёта наверх»","«Не знаю. Сказали — делаем»","Назову цель компании, но не скажу, что это меняет в моей работе","Скажу, что сломается или станет хуже на моём участке, если ничего не менять"]},
+    {code:"A2", ch:1, t:"Что вы делали за две недели с информацией об изменении: письмами, встречами, материалами?", o:["Не открывал, не приходил, не читал","Был на встречах формально, не вникал","Читал и уточнял, как именно делать","Сам искал информацию и делился найденным с коллегами"]},
+    {code:"A3", ch:2, t:"Как коллеги вокруг вас обсуждают изменение, когда руководителя нет рядом?", o:["Сарказм, мемы про руководство","Не обсуждают вовсе","Обсуждают, кому будет хуже","Обсуждают, как сделать это лучше"]}
+  ]},
+  {id:"D", en:"Desire", ru:"Хочу ли я участвовать", q:[
+    {code:"D4", ch:0, t:"Как вы сами относитесь к этому изменению, если честно?", o:["Считаю ошибкой, хотел бы, чтобы его отменили","Соглашаюсь вслух, но мне всё равно","«Надо так надо», без интереса","Мне важно, чтобы получилось; спорю по существу и предлагаю своё"]},
+    {code:"D5", ch:1, t:"Делали ли вы за две недели по изменению что-нибудь сверх обязательного?", o:["Только то, что прямо потребовали","Ровно требуемый минимум","Раз-другой сделал чуть больше нужного","Сам брал задачи или предлагал улучшения, о которых не просили"]},
+    {code:"D6", ch:2, t:"Что происходит в команде, когда кто-то открыто против изменения или демонстративно делает по-старому?", o:["Многие его поддерживают","Молчим, чтобы не ссориться","Жалуются руководителю и ждут, что он разберётся","Коллеги сами по-товарищески говорят ему, что он подводит остальных"]}
+  ]},
+  {id:"K", en:"Knowledge", ru:"Знаю ли я, как", q:[
+    {code:"K7", ch:0, t:"Можете ли вы прямо сейчас, не открывая систему и инструкцию, назвать шаги нового процесса?", o:["Не могу начать","Называю начало, дальше сбиваюсь","Называю все шаги, путаюсь в исключениях","Называю шаги и могу объяснить, почему они такие"]},
+    {code:"K8", ch:1, t:"Что вы делали, когда за эти две недели застревали в новом процессе?", o:["Бросал или делал по-старому","Сразу шёл к руководителю","Искал сам: инструкция, база знаний, коллега","Разбирался и записывал решение, чтобы другим было проще"]},
+    {code:"K9", ch:2, t:"К кому вы можете пойти за советом по новому процессу?", o:["Ни к кому, каждый разбирается в одиночку","Только к руководителю","Есть один-два коллеги, к которым ходят все","В команде обмениваются приёмами между собой"]}
+  ]},
+  {id:"Ab", en:"Ability", ru:"Получается ли у меня на деле", q:[
+    {code:"Ab10", ch:0, t:"Как вы сами описали бы своё состояние, когда работаете по-новому?", o:["«Я физически не могу это сделать»","«Ничего не успеваю, всё тормозит»","«Медленно, но справляюсь»","«Уже привычно, руки делают сами»"]},
+    {code:"Ab11", ch:1, t:"Как у вас сейчас получается работа по-новому?", o:["Фактически не делаю","Медленно и с ошибками, много переделок","Вышел на прежнюю скорость, ошибки редкие","Справляюсь и с нестандартными случаями"]},
+    {code:"Ab12", ch:2, t:"Что происходит в команде, когда горит срок, в том числе по проекту для заказчика?", o:["Паника и поиск виноватого","Каждый спасает свой участок","Договариваемся только через руководителя","Договариваемся между собой и перераспределяем работу"]}
+  ]},
+  {id:"R", en:"Reinforcement", ru:"Останется ли это", q:[
+    {code:"R13", ch:0, t:"Что вы думаете, когда ошибаетесь, работая по-новому?", o:["«Лучше бы делал по-старому, за такое накажут»","Стараюсь, чтобы никто не заметил","«Ничего страшного, исправлю»","Рассказываю коллегам, чтобы они не наступили на те же грабли"]},
+    {code:"R14", ch:1, t:"Что вы делаете, когда неделю-две никто не проверяет работу по-новому?", o:["Возвращаюсь к старому способу","Делаю по-новому только то, что попадёт в отчёт","Работаю по-новому, но в аврал откатываюсь","Работаю по-новому всегда, включая авралы"]},
+    {code:"R15", ch:2, t:"Как в команде отмечают то, что получается по-новому?", o:["Никак, успехи не замечают","Сухое «спасибо» на планёрке","Публично хвалят конкретных людей","Есть свой ритуал: разбираем удачные случаи, делимся приёмами"]}
+  ]}
+];
+var CHANNELS = ["Думаю и говорю","Делаю","Вокруг меня"];
+var NAMES = {A:"Осознание", D:"Желание", K:"Знание", Ab:"Способность", R:"Закрепление"};
+var HINDERS = [
+  {v:"skill", t:"Не умею или не уверен"},
+  {v:"why", t:"Не хочу, не вижу смысла"},
+  {v:"client", t:"Срочные задачи по проектам для заказчиков", cond:true},
+  {v:"other_change", t:"Другие внутренние изменения", cond:true},
+  {v:"access", t:"Нет доступа, инструмента или он не работает", cond:true},
+  {v:"other", t:"Другое"}
+];
+var ZONES = [
+  {name:"красная", text:"Здесь изменение для вас по-настоящему застряло. Дальше двигаться трудно, пока это не решено. Иногда причина на шаг раньше: посмотрите и на предыдущий элемент."},
+  {name:"оранжевая", text:"Вы говорите или делаете то, что требуется, но изнутри это пока не ваше или получается с большим трудом."},
+  {name:"жёлтая", text:"В целом получается, но держится на усилии. Первый же аврал может вернуть всё к старому."},
+  {name:"зелёная", text:"Это уже часть вашей работы."}
+];
+var ADVICE = {
+  A:{what:"Изменение пришло как решение сверху, и связи с вашей работой не видно.",
+     self:"Сформулируйте одной фразой, что изменение меняет на вашем участке. Если не получается, вопрос не в вас. Запишите два-три вопроса «зачем», которые остались.",
+     ask:"Объяснить на примере вашего участка, что сломается, если ничего не менять. Ответить на ваши вопросы письменно, включая «пока не знаем»."},
+  D:{what:"Вы видите, что теряете: время, удобство, статус эксперта, контроль. Или не видите, что выигрываете.",
+     self:"Честно назовите для себя, что именно теряете. Подумайте, на какую деталь внедрения вы хотели бы повлиять.",
+     ask:"Разговор о том, что вы теряете, без переубеждения. Право влиять на детали внедрения. Если система наказывает за новое (двойная работа, старые KPI), убрать хотя бы одно из этого."},
+  K:{what:"Не хватает понятной инструкции, примера или человека, у которого можно спросить.",
+     self:"Запишите шаги процесса так, как их понимаете, и сверьте с коллегой. Правило 15 минут: сначала сам, потом коллега, потом руководитель.",
+     ask:"Процесс на одной странице с реальным примером. Назвать человека, к которому можно ходить с вопросами. Короткий разбор типичных ошибок."},
+  Ab:{what:"Не хватает практики, времени или условий. Часто новое делается поверх старой работы и клиентской нагрузки.",
+     self:"Выберите одну задачу, которую попробуете сделать по-новому полностью, от начала до конца. Отмечайте, где застреваете.",
+     ask:"Защищённое время на освоение без давления по скорости. Снять дублирование старого и нового. Посидеть рядом на первой задаче. Если мешает клиентская нагрузка, договориться о приоритетах."},
+  R:{what:"Новое не закреплено: в аврал проще по-старому, ошибки наказываются, успехи никто не замечает.",
+     self:"Заметьте, в какой момент вы откатываетесь к старому, и расскажите об этом на ретро.",
+     ask:"«Быструю версию» нового процесса для авралов. Разбор ошибок без поиска виноватого. Отмечать, когда у команды получается по-новому."}
+};
+var KEY = "uchastnik:draft";
+var form = document.getElementById("form");
+
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+function build(){
+  var h = "";
+  ELEMENTS.forEach(function(el){
+    h += '<section class="card"><div class="tag">' + el.id + ' — ' + el.en + '</div><h2>' + el.ru + '</h2>';
+    el.q.forEach(function(q){
+      h += '<div class="q"><div class="q-chan">' + q.code + ' · ' + CHANNELS[q.ch].toLowerCase() + '</div><div class="q-title">' + q.t + '</div>';
+      q.o.forEach(function(o, v){
+        h += '<label class="opt"><input type="radio" name="' + q.code + '" value="' + v + '"><span>' + o + '</span></label>';
+      });
+      h += '</div>';
+    });
+    h += '</section>';
+  });
+  h += '<section class="card"><div class="tag">Вне подсчёта</div><h2>Что мешает</h2>';
+  h += '<div class="q"><div class="q-title">Когда вы не работаете по-новому, что чаще всего мешает? Можно выбрать несколько.</div>';
+  HINDERS.forEach(function(x){
+    h += '<label class="opt"><input type="checkbox" name="hinder" value="' + x.v + '"><span>' + x.t + '</span></label>';
+  });
+  h += '</div><div class="q"><label class="q-title" for="help" style="display:block">Что одно больше всего помогло бы вам?</label><input type="text" id="help" maxlength="200"></div></section>';
+  form.innerHTML = h;
+}
+
+function refresh(){
+  var labels = form.querySelectorAll("label.opt");
+  for(var i=0;i<labels.length;i++){
+    var inp = labels[i].querySelector("input");
+    labels[i].classList.toggle("on", !!(inp && inp.checked));
+  }
+}
+
+function collect(){
+  var a = {};
+  var checked = form.querySelectorAll("input[type=radio]:checked");
+  for(var i=0;i<checked.length;i++) a[checked[i].name] = +checked[i].value;
+  var hs = [];
+  var cb = form.querySelectorAll("input[name=hinder]:checked");
+  for(var j=0;j<cb.length;j++) hs.push(cb[j].value);
+  return {answers:a, hinder:hs, help:document.getElementById("help").value, change:document.getElementById("change").value};
+}
+
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(collect())); }catch(e){} }
+function load(){
+  try{
+    var d = JSON.parse(localStorage.getItem(KEY) || "null");
+    if(!d) return;
+    Object.keys(d.answers || {}).forEach(function(k){
+      var el = form.querySelector('input[name="' + k + '"][value="' + d.answers[k] + '"]');
+      if(el) el.checked = true;
+    });
+    (d.hinder || []).forEach(function(v){
+      var el = form.querySelector('input[name=hinder][value="' + v + '"]');
+      if(el) el.checked = true;
+    });
+    if(typeof d.help === "string") document.getElementById("help").value = d.help;
+    if(typeof d.change === "string") document.getElementById("change").value = d.change;
+  }catch(e){}
+}
+function clearAll(){ try{ localStorage.removeItem(KEY); }catch(e){} }
+
+function compute(a){
+  var els = {}, order = ELEMENTS.map(function(e){ return e.id; });
+  ELEMENTS.forEach(function(el){
+    var vals = el.q.map(function(q){ return a[q.code]; });
+    var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+    els[el.id] = {vals:vals, score:mn, spread:mx - mn, low:vals.indexOf(mn)};
+  });
+  var minScore = Math.min.apply(null, order.map(function(id){ return els[id].score; }));
+  var tied = order.filter(function(id){ return els[id].score === minScore; });
+  var main = tied[0];
+  var special = els.A.score === 3 && els.D.score === 3 && (els.K.score <= 1 || els.Ab.score <= 1);
+  if(special) main = els.K.score <= els.Ab.score ? "K" : "Ab";
+  return {els:els, order:order, minScore:minScore, main: minScore === 3 ? null : main, tied:tied, special:special};
+}
+
+function showResult(){
+  var d = collect();
+  var missing = [];
+  ELEMENTS.forEach(function(el){ el.q.forEach(function(q){ if(typeof d.answers[q.code] !== "number") missing.push(q.code); }); });
+  if(missing.length){
+    document.getElementById("msg").textContent = "Остались вопросы без ответа: " + missing.join(", ") + ".";
+    var first = form.querySelector('input[name="' + missing[0] + '"]');
+    if(first) first.closest(".q").scrollIntoView({behavior:"smooth", block:"center"});
+    return;
+  }
+  document.getElementById("msg").textContent = "";
+  var r = compute(d.answers);
+  var h = '<h1>Ваш результат</h1>';
+  if(d.change) h += '<p class="muted">Изменение: ' + esc(d.change) + '</p>';
+  h += '<div class="card">';
+  if(!r.main){
+    h += '<div class="big">Все элементы в зелёной зоне</div><p>Это изменение уже стало частью вашей работы. Если хотите помочь коллегам, расскажите на ретро, что вам помогло.</p>';
+  } else {
+    var e = r.els[r.main];
+    h += '<div class="tag">Главный барьер</div><div class="big">' + NAMES[r.main] + ' (' + r.main + ')</div>';
+    h += '<p><span class="z' + e.score + '" style="padding:2px 8px;border-radius:6px">Балл ' + e.score + ' · ' + ZONES[e.score].name + ' зона</span></p>';
+    h += '<p>' + ZONES[e.score].text + '</p>';
+    if(r.special){
+      h += '<p class="note">Вы понимаете, зачем нужно изменение, и хотите, чтобы оно получилось, но пока не хватает знаний или навыка. Это нормальная стадия. Не требуйте от себя скорости и попросите помощи.</p>';
+    } else if(r.tied.length > 1){
+      h += '<p class="muted">Такой же балл у элементов: ' + r.tied.slice(1).map(function(id){ return NAMES[id]; }).join(", ") + '. Выбран более ранний: поздние элементы держатся на ранних.</p>';
+    }
+    if(e.spread >= 2) h += '<p>Сильнее всего проседает канал «' + CHANNELS[e.low].toLowerCase() + '». Решение стоит искать там.</p>';
+  }
+  h += '</div>';
+
+  h += '<div class="card"><h2>Все пять элементов</h2><p class="muted">Балл элемента равен самому низкому из трёх ответов.</p><div class="table-wrap"><table><tr><th>Элемент</th><th>Думаю и говорю</th><th>Делаю</th><th>Вокруг меня</th><th>Балл</th></tr>';
+  r.order.forEach(function(id){
+    var e = r.els[id];
+    h += '<tr><td class="el">' + id + ' ' + NAMES[id] + (id === r.main ? ' <b>· главный барьер</b>' : '') + '</td>';
+    e.vals.forEach(function(v){ h += '<td>' + v + '</td>'; });
+    h += '<td class="z' + e.score + '"><b>' + e.score + '</b></td></tr>';
+  });
+  h += '</table></div><p class="muted" style="margin-top:10px">0 — красная · 1 — оранжевая · 2 — жёлтая · 3 — зелёная</p></div>';
+
+  if(r.main){
+    var ad = ADVICE[r.main];
+    h += '<div class="card"><h2>Что с этим делать</h2><p><b>Что, скорее всего, происходит.</b> ' + ad.what + '</p><p><b>Что вы можете сделать сами.</b> ' + ad.self + '</p><p><b>О чём попросить руководителя.</b> ' + ad.ask + '</p></div>';
+  }
+  var cond = d.hinder.filter(function(v){ return HINDERS.some(function(x){ return x.v === v && x.cond; }); });
+  if(cond.length){
+    h += '<div class="card note"><p><b>Часть того, что мешает, не зависит от вас.</b> Скажите руководителю конкретно, что именно забирает время или чего не хватает. Это вопрос приоритетов и условий работы, а не вашего старания.</p></div>';
+  }
+  h += '<div class="card"><h2>Как сформулировать просьбу</h2><p>«Мне сейчас больше всего мешает ________. Мне помогло бы ________' + (d.help ? ' (вы написали: ' + esc(d.help) + ')' : '') + '. Можем обсудить это до ________?»</p></div>';
+  h += '<div class="card noprint"><button type="button" class="secondary" id="again">Изменить ответы</button><button type="button" class="secondary" id="print">Распечатать или сохранить в PDF</button><button type="button" class="secondary" id="wipe">Удалить мои ответы с этого устройства</button></div>';
+
+  var res = document.getElementById("screen-result");
+  res.innerHTML = h;
+  document.getElementById("screen-form").classList.add("hidden");
+  res.classList.remove("hidden");
+  window.scrollTo(0,0);
+  document.getElementById("again").onclick = function(){ res.classList.add("hidden"); document.getElementById("screen-form").classList.remove("hidden"); window.scrollTo(0,0); };
+  document.getElementById("print").onclick = function(){ window.print(); };
+  document.getElementById("wipe").onclick = function(){
+    clearAll(); form.reset(); document.getElementById("change").value = ""; refresh();
+    res.classList.add("hidden"); document.getElementById("screen-form").classList.remove("hidden"); window.scrollTo(0,0);
+  };
+}
+
+build(); load(); refresh();
+form.addEventListener("change", function(){ refresh(); save(); });
+form.addEventListener("input", save);
+document.getElementById("change").addEventListener("input", save);
+document.getElementById("submit").addEventListener("click", showResult);
+</script>
+</body>
+</html>
